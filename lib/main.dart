@@ -35,28 +35,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
-  final bool _isSongSelection = true;
-  final List<Tab> myTabs = <Tab>[
-    Tab(text: 'Select Songs'),
-    Tab(text: 'My Playlist'),
-  ];
-
-  TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(vsync: this, length: myTabs.length);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
+class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,22 +45,7 @@ class _MyHomePageState extends State<MyHomePage>
         body: Center(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            VideoComponent(videoUrl: "meow"),
-            TabBar(
-              controller: _tabController,
-              tabs: myTabs,
-              labelColor: Colors.black,
-            ),
-            SizedBox(
-                height: 300.0,
-                child: TabBarView(
-                  controller: _tabController,
-                  children: myTabs.map((Tab tab) {
-                    return Center(child: Text(tab.text));
-                  }).toList(),
-                ))
-          ],
+          children: <Widget>[VideoComponent(videoUrl: "meow"), KtvUI()],
         )));
   }
 }
@@ -99,7 +63,7 @@ class VideoComponent extends StatefulWidget {
 class _VideoComponentState extends State<VideoComponent> {
   void playYoutubeVideo() {
     FlutterYoutube.playYoutubeVideoByUrl(
-        apiKey: "AIzaSyA-r5-33ElkuO2nkRSfQ1DFr_e1M0c9kzU",
+        apiKey: "AIzaSyAXhqkYvm0nn82rGDePq1l_ttw_T5Im1p0",
         videoUrl: "https://www.youtube.com/watch?v=TmwgJ8I7QCI",
         autoPlay: true,
         fullScreen: false);
@@ -122,4 +86,109 @@ class _VideoComponentState extends State<VideoComponent> {
   }
 }
 
-// Tabbed
+// KtvUI
+
+class KtvUI extends StatefulWidget {
+  KtvUI({Key key}) : super(key: key);
+
+  @override
+  _KtvUIState createState() => _KtvUIState();
+}
+
+class _KtvUIState extends State<KtvUI> with SingleTickerProviderStateMixin {
+  final List<Tab> myTabs = <Tab>[
+    Tab(text: 'Select Songs'),
+    Tab(text: 'My Playlist'),
+  ];
+
+  TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(vsync: this, length: myTabs.length);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Column(
+      children: <Widget>[
+        TabBar(
+          controller: _tabController,
+          tabs: myTabs,
+          labelColor: Colors.black,
+        ),
+        SizedBox(
+            height: 300.0,
+            child: TabBarView(
+              controller: _tabController,
+              children: <Widget>[
+                SelectSong(),
+                Center(child: Text("Your Playlist"))
+              ],
+            ))
+      ],
+    ));
+  }
+}
+
+// Select Songs Tab
+
+class SelectSong extends StatefulWidget {
+  SelectSong({Key key, this.videoUrl}) : super(key: key);
+
+  final String videoUrl;
+
+  @override
+  _SelectSongState createState() => _SelectSongState();
+}
+
+class _SelectSongState extends State<SelectSong> {
+  AppBar _getAppBar(String title) {
+    return AppBar(
+      title: Text(title, style: TextStyle(color: Colors.black87)),
+      backgroundColor: Colors.white,
+      centerTitle: true,
+      elevation: 1.0,
+      iconTheme: IconThemeData(color: Colors.black87),
+    );
+  }
+
+  void _pushToCategory(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) {
+          // Returns a Scaffold. We are defining the body here
+
+          return Scaffold(
+              appBar: _getAppBar("Chinese Songs"),
+              body: Center(
+                child: RaisedButton(
+                  child: Text("Meow"),
+                  onPressed: () => _pushToCategory(context),
+                ),
+              ));
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: _getAppBar("Select Songs"),
+        body: Center(
+          child: RaisedButton(
+            child: Text("Chinese Songs"),
+            onPressed: () => _pushToCategory(context),
+          ),
+        ));
+  }
+}
