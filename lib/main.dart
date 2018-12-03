@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_youtube/flutter_youtube.dart';
 
 void main() => runApp(MyApp());
@@ -44,8 +45,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Center(
             child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[VideoComponent(videoUrl: "meow"), KtvUI()],
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(child: VideoComponent(videoUrl: "meow"), flex: 2),
+            Expanded(child: KtvUI(), flex: 3)
+          ],
         )));
   }
 }
@@ -71,18 +75,20 @@ class _VideoComponentState extends State<VideoComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Text("This is a placeholder for video"),
-          RaisedButton(
-            child: Text("Press here to play video"),
-            onPressed: playYoutubeVideo,
+    return Container(
+        decoration: BoxDecoration(color: Colors.blue[50]),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text("This is a placeholder for video"),
+              RaisedButton(
+                child: Text("Press here to play video"),
+                onPressed: playYoutubeVideo,
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }
 
@@ -117,24 +123,23 @@ class _KtvUIState extends State<KtvUI> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Column(
-      children: <Widget>[
-        TabBar(
-          controller: _tabController,
-          tabs: myTabs,
-          labelColor: Colors.black,
+    return Container(
+        child: CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(CupertinoIcons.music_note),
+          title: Text('Select Songs'),
         ),
-        SizedBox(
-            height: 300.0,
-            child: TabBarView(
-              controller: _tabController,
-              children: <Widget>[
-                SelectSong(),
-                Center(child: Text("Your Playlist"))
-              ],
-            ))
-      ],
+        BottomNavigationBarItem(
+          icon: Icon(CupertinoIcons.play_arrow),
+          title: Text('Playlist'),
+        ),
+      ]),
+      tabBuilder: (context, index) => CupertinoPageScaffold(
+            child: Center(
+              child: index == 0 ? SelectSong() : Text("Playlist"),
+            ),
+          ),
     ));
   }
 }
@@ -151,44 +156,109 @@ class SelectSong extends StatefulWidget {
 }
 
 class _SelectSongState extends State<SelectSong> {
-  AppBar _getAppBar(String title) {
+  final List<String> _currPageType = new List<String>();
+
+  AppBar _getAppBar(String title, bool hasBack) {
     return AppBar(
-      title: Text(title, style: TextStyle(color: Colors.black87)),
-      backgroundColor: Colors.white,
-      centerTitle: true,
-      elevation: 1.0,
-      iconTheme: IconThemeData(color: Colors.black87),
+        title: Text(title, style: TextStyle(color: Colors.black87)),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        elevation: 1.0,
+        iconTheme: IconThemeData(color: Colors.black87),
+        leading: hasBack
+            ? IconButton(
+                icon: Icon(Icons.chevron_left),
+                onPressed: () {
+                  setState(() {
+                    _currPageType.removeLast();
+                  });
+                })
+            : null);
+  }
+
+  Scaffold _getCategoriesView(String category) {
+    return Scaffold(
+        appBar: _getAppBar("Select Songs", false),
+        body: Center(
+          child: RaisedButton(
+            child: Text(category),
+            onPressed: () => _goToCategory(category),
+          ),
+        ));
+  }
+
+  Scaffold _getCategoryDetailView() {
+    return Scaffold(
+        appBar: _getAppBar(_currPageType[0], true),
+        body: Center(
+          child: RaisedButton(
+            child: Text("The Meowttens"),
+            onPressed: () {},
+          ),
+        ));
+  }
+
+  Scaffold _getNotFoundView() {
+    return Scaffold(
+      appBar: _getAppBar("No Such Route", false),
+      body: Center(child: Text(":(")),
     );
   }
 
-  void _pushToCategory(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) {
-          // Returns a Scaffold. We are defining the body here
-
-          return Scaffold(
-              appBar: _getAppBar("Chinese Songs"),
-              body: Center(
-                child: RaisedButton(
-                  child: Text("Meow"),
-                  onPressed: () => _pushToCategory(context),
-                ),
-              ));
-        },
-      ),
-    );
+  void _goToCategory(String category) {
+    setState(() {
+      _currPageType.add(category);
+    });
   }
+
+  // void _pushToCategory(BuildContext context) {
+  //   Navigator.of(context).push(
+  //     MaterialPageRoute<void>(
+  //       builder: (BuildContext context) {
+  //         // Returns a Scaffold. We are defining the body here
+
+  //         return Scaffold(
+  //             appBar: _getAppBar("Chinese Songs"),
+  //             body: Center(
+  //               child: RaisedButton(
+  //                 child: Text("Meow"),
+  //                 onPressed: () => _pushToCategory(context),
+  //               ),
+  //             ));
+  //       },
+  //     ),
+  //   );
+  // }
+
+  // void _goToCategory(BuildContext context) {
+  //   Navigator.of(context).push(PageRouteBuilder(
+  //       opaque: false,
+  //       pageBuilder: (BuildContext context, _, __) {
+  //         return Center(
+  //             child: Column(
+  //           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: <Widget>[
+  //             Expanded(child: Container(), flex: 2),
+  //             Expanded(child: KtvUI(), flex: 3)
+  //           ],
+  //         ));
+  //       },
+  //       transitionsBuilder:
+  //           (___, Animation<double> animation, ____, Widget child) {
+  //         return FadeTransition(
+  //           opacity: animation,
+  //           child: RotationTransition(
+  //             turns: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
+  //             child: child,
+  //           ),
+  //         );
+  //       }));
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: _getAppBar("Select Songs"),
-        body: Center(
-          child: RaisedButton(
-            child: Text("Chinese Songs"),
-            onPressed: () => _pushToCategory(context),
-          ),
-        ));
+    if (_currPageType.length == 0) return _getCategoriesView("cat songs");
+    if (_currPageType.length == 1) return _getCategoryDetailView();
+    return _getNotFoundView();
   }
 }
