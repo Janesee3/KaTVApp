@@ -123,7 +123,7 @@ class _KtvUIState extends State<KtvUI> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return MyInheritedWidget(
         child: CupertinoTabScaffold(
       tabBar: CupertinoTabBar(items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
@@ -136,11 +136,123 @@ class _KtvUIState extends State<KtvUI> with SingleTickerProviderStateMixin {
         ),
       ]),
       tabBuilder: (context, index) => CupertinoPageScaffold(
-            child: Center(
-              child: index == 0 ? SelectSong() : Text("Playlist"),
-            ),
+            child: Center(child: index == 0 ? SelectSong() : Playlist()),
           ),
     ));
+  }
+}
+
+// Inherited Widget
+
+class _MyInherited extends InheritedWidget {
+  _MyInherited({
+    Key key,
+    @required Widget child,
+    @required this.data,
+  }) : super(key: key, child: child);
+
+  final MyInheritedWidgetState data;
+
+  @override
+  bool updateShouldNotify(_MyInherited oldWidget) {
+    return true;
+  }
+}
+
+class MyInheritedWidget extends StatefulWidget {
+  MyInheritedWidget({
+    Key key,
+    this.child,
+  }) : super(key: key);
+
+  final Widget child;
+
+  @override
+  MyInheritedWidgetState createState() => new MyInheritedWidgetState();
+
+  static MyInheritedWidgetState of(BuildContext context) {
+    return (context.inheritFromWidgetOfExactType(_MyInherited) as _MyInherited)
+        .data;
+  }
+}
+
+class MyInheritedWidgetState extends State<MyInheritedWidget> {
+  /// List of Items
+  List<String> _items = <String>[];
+
+  /// Getter (number of items)
+  int get itemsCount => _items.length;
+
+  List<String> get items => _items;
+
+  /// Helper method to add an Item
+  void addItem(String reference) {
+    setState(() {
+      _items.add(reference);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new _MyInherited(
+      data: this,
+      child: widget.child,
+    );
+  }
+}
+
+// Playlist Tab
+
+class Playlist extends StatefulWidget {
+  Playlist({Key key}) : super(key: key);
+
+  @override
+  _PlaylistState createState() => _PlaylistState();
+}
+
+class _PlaylistState extends State<Playlist> {
+  AppBar _getAppBar(String title) {
+    return AppBar(
+        title: Text(title, style: TextStyle(color: Colors.black87)),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        elevation: 1.0,
+        iconTheme: IconThemeData(color: Colors.black87));
+  }
+
+  Widget _getSongsListView(MyInheritedWidgetState state) {
+    return Center(
+        child: ListView.builder(
+      itemBuilder: (context, position) {
+        return GestureDetector(
+            onTap: () {},
+            child: Card(
+                child: Padding(
+                    padding: EdgeInsets.fromLTRB(24.0, 12.0, 12.0, 12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(state.items[position]),
+                        IconButton(
+                          icon: Icon(Icons.drag_handle),
+                          onPressed: () {},
+                        )
+                      ],
+                    ))));
+      },
+      itemCount: state.items.length,
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final MyInheritedWidgetState state = MyInheritedWidget.of(context);
+
+    return Scaffold(
+      appBar: _getAppBar("Playlist"),
+      body: _getSongsListView(state),
+    );
   }
 }
 
@@ -157,6 +269,39 @@ class SelectSong extends StatefulWidget {
 
 class _SelectSongState extends State<SelectSong> {
   final List<String> _currPageType = new List<String>();
+
+  final Map _songData = {
+    "categories": {
+      "Meow Language": {
+        "The Meowttens": {
+          "Meowing Under the Moon": "www.google.com",
+          "Purr and Fur": "www.google.com",
+          "Santa Claws is Rolling to Town": ""
+        }
+      },
+      "Chinese": {
+        "GEM": {
+          "光年之外": "https://www.youtube.com/watch?v=T4SimnaiktU",
+          "那一夜": "https://www.youtube.com/watch?v=ugVNDvnDDpA",
+          "倒数": "https://www.youtube.com/watch?v=ma7r2HGqwXs"
+        },
+        "Hebe Tien": {
+          "你就不要想起我": "https://www.youtube.com/watch?v=GsKbnsUN2RE",
+          "魔鬼中的天使": "https://www.youtube.com/watch?v=na_xv5iFt2Y",
+          "寂寞寂寞就好": "https://www.youtube.com/watch?v=DyFIzKYQQYE"
+        },
+        "JJ Lin": {},
+        "Kimberlyn Chen": {}
+      },
+      "Korean": {"Ailee": {}, "IU": {}},
+      "English": {
+        "Fall Out Boy": {},
+        "Taylor Swift": {},
+        "Maroon 5": {},
+        "Adele": {}
+      }
+    }
+  };
 
   AppBar _getAppBar(String title, bool hasBack) {
     return AppBar(
@@ -176,26 +321,70 @@ class _SelectSongState extends State<SelectSong> {
             : null);
   }
 
-  Scaffold _getCategoriesView(String category) {
+  Widget _getGridView(List<dynamic> items, Function onTap) {
+    return Center(
+        child: GridView.builder(
+      itemBuilder: (context, position) {
+        return GestureDetector(
+            onTap: () => onTap(items[position]),
+            child: Card(
+              child: Center(child: Text(items[position])),
+            ));
+      },
+      itemCount: items.length,
+      gridDelegate:
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+    ));
+  }
+
+  Scaffold _getCategoriesView() {
+    Map categoriesMap = _songData["categories"];
+    List<dynamic> keys = categoriesMap.keys.toList();
+
     return Scaffold(
         appBar: _getAppBar("Select Songs", false),
-        body: Center(
-          child: RaisedButton(
-            child: Text(category),
-            onPressed: () => _goToCategory(category),
-          ),
-        ));
+        body: _getGridView(keys, _goToCategory));
   }
 
   Scaffold _getCategoryDetailView() {
+    Map categoryMap = _songData["categories"][_currPageType[0]];
+    List<dynamic> keys = categoryMap.keys.toList();
+
     return Scaffold(
         appBar: _getAppBar(_currPageType[0], true),
+        body: _getGridView(keys, _goToSinger));
+  }
+
+  Scaffold _getSingerDetailView(MyInheritedWidgetState state) {
+    Map singerMap = _songData["categories"][_currPageType[0]][_currPageType[1]];
+    List<dynamic> keys = singerMap.keys.toList();
+
+    return Scaffold(
+        appBar: _getAppBar(_currPageType[1], true),
         body: Center(
-          child: RaisedButton(
-            child: Text("The Meowttens"),
-            onPressed: () {},
-          ),
-        ));
+            child: ListView.builder(
+          itemBuilder: (context, position) {
+            return GestureDetector(
+                onTap: () {},
+                child: Card(
+                    child: Padding(
+                        padding: EdgeInsets.fromLTRB(24.0, 12.0, 12.0, 12.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Text(keys[position]),
+                            IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: () {
+                                state.addItem(keys[position]);
+                              },
+                            )
+                          ],
+                        ))));
+          },
+          itemCount: keys.length,
+        )));
   }
 
   Scaffold _getNotFoundView() {
@@ -211,54 +400,18 @@ class _SelectSongState extends State<SelectSong> {
     });
   }
 
-  // void _pushToCategory(BuildContext context) {
-  //   Navigator.of(context).push(
-  //     MaterialPageRoute<void>(
-  //       builder: (BuildContext context) {
-  //         // Returns a Scaffold. We are defining the body here
-
-  //         return Scaffold(
-  //             appBar: _getAppBar("Chinese Songs"),
-  //             body: Center(
-  //               child: RaisedButton(
-  //                 child: Text("Meow"),
-  //                 onPressed: () => _pushToCategory(context),
-  //               ),
-  //             ));
-  //       },
-  //     ),
-  //   );
-  // }
-
-  // void _goToCategory(BuildContext context) {
-  //   Navigator.of(context).push(PageRouteBuilder(
-  //       opaque: false,
-  //       pageBuilder: (BuildContext context, _, __) {
-  //         return Center(
-  //             child: Column(
-  //           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: <Widget>[
-  //             Expanded(child: Container(), flex: 2),
-  //             Expanded(child: KtvUI(), flex: 3)
-  //           ],
-  //         ));
-  //       },
-  //       transitionsBuilder:
-  //           (___, Animation<double> animation, ____, Widget child) {
-  //         return FadeTransition(
-  //           opacity: animation,
-  //           child: RotationTransition(
-  //             turns: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
-  //             child: child,
-  //           ),
-  //         );
-  //       }));
-  // }
+  void _goToSinger(String singer) {
+    setState(() {
+      _currPageType.add(singer);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (_currPageType.length == 0) return _getCategoriesView("cat songs");
+    final MyInheritedWidgetState state = MyInheritedWidget.of(context);
+    if (_currPageType.length == 0) return _getCategoriesView();
     if (_currPageType.length == 1) return _getCategoryDetailView();
+    if (_currPageType.length == 2) return _getSingerDetailView(state);
     return _getNotFoundView();
   }
 }
