@@ -198,25 +198,6 @@ class KtvUI extends StatefulWidget {
 }
 
 class _KtvUIState extends State<KtvUI> with SingleTickerProviderStateMixin {
-  final List<Tab> myTabs = <Tab>[
-    Tab(text: 'Select Songs'),
-    Tab(text: 'My Playlist'),
-  ];
-
-  TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(vsync: this, length: myTabs.length);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
