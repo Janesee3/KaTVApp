@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import '../../../models/song.model.dart';
-import '../../../main.dart';
+import 'package:katv_app/models/song.model.dart';
+import 'package:katv_app/screens/main_screen/main.screen.dart';
 
 class SelectSong extends StatefulWidget {
   SelectSong({Key key, this.videoUrl}) : super(key: key);
@@ -82,7 +82,7 @@ class _SelectSongState extends State<SelectSong> {
     }
   };
 
-  /*****   VIEW METHODS   ******/
+  /// ****** VIEW METHODS *******
 
   AppBar _getAppBar(String title, bool hasBack) {
     return AppBar(
@@ -153,7 +153,7 @@ class _SelectSongState extends State<SelectSong> {
                             IconButton(
                               icon: Icon(Icons.add),
                               onPressed: () {
-                                appState._addSong(songs[position], context);
+                                appState.addSong(songs[position], context);
                               },
                             )
                           ],
@@ -170,7 +170,7 @@ class _SelectSongState extends State<SelectSong> {
     );
   }
 
-  /*****   TAP CALLBACKS   ******/
+  /// **** TAP CALLBACKS *******
 
   void _goBack() {
     setState(() {
