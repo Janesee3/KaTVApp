@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "129914796131",
+    "firebase_url": "https://my-katv-app.firebaseio.com",
+    "project_id": "my-katv-app",
+    "storage_bucket": "my-katv-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129914796131:android:4408313ea7b2daf7",
+        "android_client_info": {
+          "package_name": "com.example.katvapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "129914796131-rc4lnmlpkrc8i24t756h673k6cre0dov.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTx-h0e8AbifHGy3IHPFgrpIyAcby_-8I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

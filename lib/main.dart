@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_youtube/flutter_youtube.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -12,22 +16,22 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'KaTV App'),
+      home: MainPage(title: 'KaTV App'),
     );
   }
 }
 
 // Home Page
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class MainPage extends StatefulWidget {
+  MainPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return AppInheritedWidget(
@@ -151,7 +155,7 @@ class _VideoComponentState extends State<VideoComponent> {
     } else {
       FlutterYoutube.playYoutubeVideoByUrl(
           apiKey: "AIzaSyAXhqkYvm0nn82rGDePq1l_ttw_T5Im1p0",
-          videoUrl: state._songs[0]._url,
+          videoUrl: state._songs[0].url,
           autoPlay: true,
           fullScreen: false);
     }
@@ -173,7 +177,7 @@ class _VideoComponentState extends State<VideoComponent> {
             children: <Widget>[
               state._songs.length == 0
                   ? Text("Nothing on playlist now!")
-                  : Text("Now playing " + state._songs[0]._name),
+                  : Text("Now playing " + state._songs[0].name),
               RaisedButton.icon(
                   icon: Icon(Icons.play_circle_filled),
                   onPressed: () => playYoutubeVideo(state),
@@ -285,7 +289,6 @@ class _PlaylistState extends State<Playlist> {
 }
 
 // Select Songs Tab
-
 class SelectSong extends StatefulWidget {
   SelectSong({Key key, this.videoUrl}) : super(key: key);
 
@@ -297,7 +300,6 @@ class SelectSong extends StatefulWidget {
 
 class _SelectSongState extends State<SelectSong> {
   final List<String> _currPageType = new List<String>();
-
   final Map _songData = {
     "categories": {
       "Meow Language": {
@@ -366,6 +368,28 @@ class _SelectSongState extends State<SelectSong> {
     }
   };
 
+  // Future<QuerySnapshot> _fetchData(String collectionName) {
+  //   return Firestore.instance.collection(collectionName).getDocuments();
+  // }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  //   _fetchData('categories').then((snaps) {
+  //     List<dynamic> cats =
+  //         snaps.documents.map((qs) => qs.data['name']).toList();
+  //   });
+
+  //   _fetchData('songs').then((snaps) {
+  //     List<dynamic> songs = snaps.documents.map((qs) {
+  //       return new Song(qs.data['name'], qs.data['url']);
+  //     }).toList();
+  //   });
+  // }
+
+  /*****   VIEW METHODS   ******/
+
   AppBar _getAppBar(String title, bool hasBack) {
     return AppBar(
         title: Text(title, style: TextStyle(color: Colors.black87)),
@@ -374,13 +398,7 @@ class _SelectSongState extends State<SelectSong> {
         elevation: 1.0,
         iconTheme: IconThemeData(color: Colors.black87),
         leading: hasBack
-            ? IconButton(
-                icon: Icon(Icons.chevron_left),
-                onPressed: () {
-                  setState(() {
-                    _currPageType.removeLast();
-                  });
-                })
+            ? IconButton(icon: Icon(Icons.chevron_left), onPressed: _goBack)
             : null);
   }
 
@@ -401,7 +419,7 @@ class _SelectSongState extends State<SelectSong> {
   }
 
   Scaffold _getCategoriesView() {
-    Map categoriesMap = _songData["categories"]; //eg. Chinese, English...
+    Map categoriesMap = _songData["categories"];
     List<dynamic> keys = categoriesMap.keys.toList();
 
     return Scaffold(
@@ -456,6 +474,14 @@ class _SelectSongState extends State<SelectSong> {
       appBar: _getAppBar("No Such Route", false),
       body: Center(child: Text(":(")),
     );
+  }
+
+  /*****   TAP CALLBACKS   ******/
+
+  void _goBack() {
+    setState(() {
+      _currPageType.removeLast();
+    });
   }
 
   void _goToCategory(String category) {
