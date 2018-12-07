@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_youtube/flutter_youtube.dart';
 import './app_inherited.widget.dart';
 
@@ -12,15 +11,13 @@ class VideoComponent extends StatefulWidget {
 
 class _VideoComponentState extends State<VideoComponent> {
   void playYoutubeVideo(AppInheritedWidgetState state) {
-    if (state.songs.length <= 0) {
-      // hello
-    } else {
-      FlutterYoutube.playYoutubeVideoByUrl(
-          apiKey: "AIzaSyAXhqkYvm0nn82rGDePq1l_ttw_T5Im1p0",
-          videoUrl: state.songs[0].url,
-          autoPlay: true,
-          fullScreen: false);
-    }
+    if (state.songs.length > 0) return;
+
+    FlutterYoutube.playYoutubeVideoByUrl(
+        apiKey: "AIzaSyAXhqkYvm0nn82rGDePq1l_ttw_T5Im1p0",
+        videoUrl: state.songs[0].url,
+        autoPlay: true,
+        fullScreen: false);
   }
 
   void _nextVideo(AppInheritedWidgetState appState) {

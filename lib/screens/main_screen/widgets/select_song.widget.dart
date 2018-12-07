@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:katv_app/models/song.model.dart';
 import './app_inherited.widget.dart';
 

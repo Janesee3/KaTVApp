@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:katv_app/screens/main_screen/main.screen.dart';
 
 void main() {
