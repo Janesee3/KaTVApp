@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_youtube/flutter_youtube.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
+import 'models/song.model.dart';
 
 void main() {
   runApp(MyApp());
@@ -48,16 +49,6 @@ class _MainPageState extends State<MainPage> {
               ],
             ))));
   }
-}
-
-class Song {
-  String _name;
-  String _url;
-
-  Song(this._name, this._url) {}
-
-  String get name => _name;
-  String get url => _url;
 }
 
 // Inherited Widget for Video and KTV
@@ -367,26 +358,6 @@ class _SelectSongState extends State<SelectSong> {
       }
     }
   };
-
-  // Future<QuerySnapshot> _fetchData(String collectionName) {
-  //   return Firestore.instance.collection(collectionName).getDocuments();
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   _fetchData('categories').then((snaps) {
-  //     List<dynamic> cats =
-  //         snaps.documents.map((qs) => qs.data['name']).toList();
-  //   });
-
-  //   _fetchData('songs').then((snaps) {
-  //     List<dynamic> songs = snaps.documents.map((qs) {
-  //       return new Song(qs.data['name'], qs.data['url']);
-  //     }).toList();
-  //   });
-  // }
 
   /*****   VIEW METHODS   ******/
 
