@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_youtube/flutter_youtube.dart';
 import 'package:katv_app/models/song.model.dart';
+import 'package:katv_app/screens/main_screen/widgets/app_inherited.widget.dart';
 
 // Home Page
 class MainPage extends StatefulWidget {
@@ -32,86 +33,6 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-// Inherited Widget for Video and KTV
-
-class _InheritedWidgetForApp extends InheritedWidget {
-  _InheritedWidgetForApp({
-    Key key,
-    @required Widget child,
-    @required this.data,
-  }) : super(key: key, child: child);
-
-  final AppInheritedWidgetState data;
-
-  @override
-  bool updateShouldNotify(_InheritedWidgetForApp oldWidget) {
-    return true;
-  }
-}
-
-class AppInheritedWidget extends StatefulWidget {
-  AppInheritedWidget({
-    Key key,
-    this.child,
-  }) : super(key: key);
-
-  final Widget child;
-
-  @override
-  AppInheritedWidgetState createState() => new AppInheritedWidgetState();
-
-  static AppInheritedWidgetState of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(_InheritedWidgetForApp)
-            as _InheritedWidgetForApp)
-        .data;
-  }
-}
-
-class AppInheritedWidgetState extends State<AppInheritedWidget> {
-  List<Song> _songs = <Song>[];
-
-  List<Song> get songs => _songs;
-
-  void addSong(Song reference, BuildContext context) {
-    setState(() {
-      _songs.add(reference);
-    });
-
-    final snackBar = SnackBar(
-      content: Text('Added ' + reference.name),
-      duration: Duration(seconds: 1),
-    );
-    Scaffold.of(context).showSnackBar(snackBar);
-  }
-
-  void removeFirstSong() {
-    setState(() {
-      if (_songs.length > 0) _songs.removeAt(0);
-    });
-  }
-
-  void pushSongToTop(Song song, int songIndex) {
-    setState(() {
-      _songs.removeAt(songIndex);
-      _songs.insert(0, song);
-    });
-  }
-
-  void removeSong(int songIndex) {
-    setState(() {
-      _songs.removeAt(songIndex);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new _InheritedWidgetForApp(
-      data: this,
-      child: widget.child,
-    );
-  }
-}
-
 // Video
 class VideoComponent extends StatefulWidget {
   VideoComponent({Key key}) : super(key: key);
@@ -122,12 +43,12 @@ class VideoComponent extends StatefulWidget {
 
 class _VideoComponentState extends State<VideoComponent> {
   void playYoutubeVideo(AppInheritedWidgetState state) {
-    if (state._songs.length <= 0) {
+    if (state.songs.length <= 0) {
       // hello
     } else {
       FlutterYoutube.playYoutubeVideoByUrl(
           apiKey: "AIzaSyAXhqkYvm0nn82rGDePq1l_ttw_T5Im1p0",
-          videoUrl: state._songs[0].url,
+          videoUrl: state.songs[0].url,
           autoPlay: true,
           fullScreen: false);
     }
@@ -147,9 +68,9 @@ class _VideoComponentState extends State<VideoComponent> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              state._songs.length == 0
+              state.songs.length == 0
                   ? Text("Nothing on playlist now!")
-                  : Text("Now playing " + state._songs[0].name),
+                  : Text("Now playing " + state.songs[0].name),
               RaisedButton.icon(
                   icon: Icon(Icons.play_circle_filled),
                   onPressed: () => playYoutubeVideo(state),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:katv_app/models/song.model.dart';
-import 'package:katv_app/screens/main_screen/main.screen.dart';
+import 'package:katv_app/screens/main_screen/widgets/app_inherited.widget.dart';
 
 class SelectSong extends StatefulWidget {
   SelectSong({Key key, this.videoUrl}) : super(key: key);
