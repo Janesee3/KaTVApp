@@ -1,0 +1,181 @@
+{
+  "categories": [
+    {
+      "name": "Meow Language",
+      "singers": [
+        {
+          "name": "The Meowttens",
+          "songs": [
+            { "name": "Meowing Under the Moon", "url": "www.google.com" },
+            { "name": "Purr and Fur", "url": "www.google.com" },
+            { "name": "Santa Claws is Rolling to Town", "url": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chinese",
+      "singers": [
+        {
+          "name": "GEM",
+          "songs": [
+            {
+              "name": "光年之外",
+              "url": "https://www.youtube.com/watch?v=T4SimnaiktU"
+            },
+            {
+              "name": "那一夜",
+              "url": "https://www.youtube.com/watch?v=ugVNDvnDDpA"
+            },
+            {
+              "name": "倒数",
+              "url": "https://www.youtube.com/watch?v=ma7r2HGqwXs"
+            }
+          ]
+        },
+        {
+          "name": "Hebe Tien",
+          "songs": [
+            {
+              "name": "你就不要想起我",
+              "url": "https://www.youtube.com/watch?v=GsKbnsUN2RE"
+            },
+            {
+              "name": "魔鬼中的天使",
+              "url": "https://www.youtube.com/watch?v=na_xv5iFt2Y"
+            },
+            {
+              "name": "寂寞寂寞就好",
+              "url": "https://www.youtube.com/watch?v=DyFIzKYQQYE"
+            }
+          ]
+        },
+        {
+          "name": "JJ Lin",
+          "songs": [
+            {
+              "name": "曹操",
+              "url": "https://www.youtube.com/watch?v=3J_bkgexrE8"
+            },
+            {
+              "name": "不死之身",
+              "url": "https://www.youtube.com/watch?v=h03_hs_QbEE"
+            },
+            {
+              "name": "美人鱼",
+              "url": "https://www.youtube.com/watch?v=jdf3gxFP0F8"
+            },
+            {
+              "name": "就是我",
+              "url": "https://www.youtube.com/watch?v=GLtLjBS0cs0"
+            }
+          ]
+        },
+        {
+          "name": "Kimberlyn Chen",
+          "songs": [
+            {
+              "name": "爱你",
+              "url": "https://www.youtube.com/watch?v=4QoVMJN-nFs"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "English",
+      "singers": [
+        {
+          "name": "Fall Out Boy",
+          "songs": [
+            {
+              "name": "Dance, Dance",
+              "url": "https://www.youtube.com/watch?v=bxxJ25-3QEA"
+            },
+            {
+              "name": "Sugar, we're going down",
+              "url": "https://www.youtube.com/watch?v=d5lOB7Ibjhg"
+            }
+          ]
+        },
+        {
+          "name": "Taylor Swift",
+          "songs": [
+            {
+              "name": "Love Story",
+              "url": "https://www.youtube.com/watch?v=PDM-GcQ6NT0"
+            }
+          ]
+        },
+        {
+          "name": "Maroon 5",
+          "songs": [
+            {
+              "name": "Animals",
+              "url": "https://www.youtube.com/watch?v=a5-tjIB9YBk"
+            },
+            {
+              "name": "She will be loved",
+              "url": "https://www.youtube.com/watch?v=zJmVq8-p1CE"
+            }
+          ]
+        },
+        {
+          "name": "Adele",
+          "songs": [
+            {
+              "name": "Someone like you",
+              "url": "https://www.youtube.com/watch?v=Cgdes6lFjzM"
+            },
+            {
+              "name": "All I Asked",
+              "url": "https://www.youtube.com/watch?v=QnChoAPlMyc"
+            },
+            {
+              "name": "When we were young",
+              "url": "https://www.youtube.com/watch?v=vVGUM_e5zDA"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Korean",
+      "singers": [
+        {
+          "name": "Ailee",
+          "songs": [
+            {
+              "name": "Reminiscing",
+              "url": "https://www.youtube.com/watch?v=Spo8fiFHQls"
+            },
+            {
+              "name": "Heaven",
+              "url": "https://www.youtube.com/watch?v=DQzK8II1qAU"
+            },
+            {
+              "name": "I will go to you like first snow",
+              "url": "https://www.youtube.com/watch?v=xW7gKmeXhuQ"
+            },
+            {
+              "name": "I will show you",
+              "url": "https://www.youtube.com/watch?v=-Q-OmGsk4hM"
+            },
+            {
+              "name": "If you",
+              "url": "https://www.youtube.com/watch?v=R3xy0vbxNUs"
+            },
+            {
+              "name": "Rainy Day",
+              "url": "https://www.youtube.com/watch?v=qSFFDxKE4B4"
+            },
+            {
+              "name": "U&I",
+              "url": "https://www.youtube.com/watch?v=398DDVagbPI"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

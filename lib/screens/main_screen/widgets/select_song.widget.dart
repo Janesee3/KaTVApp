@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:katv_app/models/song.model.dart';
 import './app_inherited.widget.dart';
+import 'package:katv_app/models/category.model.dart';
+import 'package:katv_app/models/singer.model.dart';
+import 'package:katv_app/models/song.model.dart';
 
 class SelectSong extends StatefulWidget {
-  SelectSong({Key key, this.videoUrl}) : super(key: key);
+  SelectSong({Key key, this.songData}) : super(key: key);
 
-  final String videoUrl;
+  final List<Category> songData;
 
   @override
   _SelectSongState createState() => _SelectSongState();
@@ -13,73 +15,23 @@ class SelectSong extends StatefulWidget {
 
 class _SelectSongState extends State<SelectSong> {
   final List<String> _currPageType = new List<String>();
-  final Map _songData = {
-    "categories": {
-      "Meow Language": {
-        "The Meowttens": [
-          Song("Meowing Under the Moon", "www.google.com"),
-          Song("Purr and Fur", "www.google.com"),
-          Song("Santa Claws is Rolling to Town", "")
-        ]
-      },
-      "Chinese": {
-        "GEM": [
-          Song("光年之外", "https://www.youtube.com/watch?v=T4SimnaiktU"),
-          Song("那一夜", "https://www.youtube.com/watch?v=ugVNDvnDDpA"),
-          Song("倒数", "https://www.youtube.com/watch?v=ma7r2HGqwXs")
-        ],
-        "Hebe Tien": [
-          Song("你就不要想起我", "https://www.youtube.com/watch?v=GsKbnsUN2RE"),
-          Song("魔鬼中的天使", "https://www.youtube.com/watch?v=na_xv5iFt2Y"),
-          Song("寂寞寂寞就好", "https://www.youtube.com/watch?v=DyFIzKYQQYE")
-        ],
-        "JJ Lin": [
-          Song("曹操", "https://www.youtube.com/watch?v=3J_bkgexrE8"),
-          Song("不死之身", "https://www.youtube.com/watch?v=h03_hs_QbEE"),
-          Song("美人鱼", "https://www.youtube.com/watch?v=jdf3gxFP0F8"),
-          Song("就是我", "https://www.youtube.com/watch?v=GLtLjBS0cs0")
-        ],
-        "Kimberlyn Chen": [
-          Song("爱你", "https://www.youtube.com/watch?v=4QoVMJN-nFs")
-        ]
-      },
-      "Korean": {
-        "Ailee": [
-          Song("Reminiscing", "https://www.youtube.com/watch?v=Spo8fiFHQls"),
-          Song("Heaven", "https://www.youtube.com/watch?v=DQzK8II1qAU"),
-          Song("I will go to you like first snow",
-              "https://www.youtube.com/watch?v=xW7gKmeXhuQ"),
-          Song(
-              "I will show you", "https://www.youtube.com/watch?v=-Q-OmGsk4hM"),
-          Song("If you", "https://www.youtube.com/watch?v=R3xy0vbxNUs"),
-          Song("Rainy Day", "https://www.youtube.com/watch?v=qSFFDxKE4B4"),
-          Song("U&I", "https://www.youtube.com/watch?v=398DDVagbPI"),
-        ]
-      },
-      "English": {
-        "Fall Out Boy": [
-          Song("Dance, Dance", "https://www.youtube.com/watch?v=bxxJ25-3QEA"),
-          Song("Sugar, we're going down",
-              "https://www.youtube.com/watch?v=d5lOB7Ibjhg"),
-        ],
-        "Taylor Swift": [
-          Song("Love Story", "https://www.youtube.com/watch?v=PDM-GcQ6NT0")
-        ],
-        "Maroon 5": [
-          Song("Animals", "https://www.youtube.com/watch?v=a5-tjIB9YBk"),
-          Song("She will be loved",
-              "https://www.youtube.com/watch?v=zJmVq8-p1CE"),
-        ],
-        "Adele": [
-          Song("Someone like you",
-              "https://www.youtube.com/watch?v=Cgdes6lFjzM"),
-          Song("All I Asked", "https://www.youtube.com/watch?v=QnChoAPlMyc"),
-          Song("When we were young",
-              "https://www.youtube.com/watch?v=vVGUM_e5zDA"),
-        ]
-      }
+
+  Category _getSelectedCategory() {
+    if (_currPageType.length > 0) {
+      return widget.songData
+          .where((cat) => cat.name == _currPageType[0])
+          .toList()[0];
     }
-  };
+  }
+
+  Singer _getSelectedSinger() {
+    if (_currPageType.length > 1) {
+      return _getSelectedCategory()
+          .singers
+          .where((singer) => singer.name == _currPageType[1])
+          .toList()[0];
+    }
+  }
 
   /// ****** VIEW METHODS *******
 
@@ -112,27 +64,24 @@ class _SelectSongState extends State<SelectSong> {
   }
 
   Scaffold _getCategoriesView() {
-    Map categoriesMap = _songData["categories"];
-    List<dynamic> keys = categoriesMap.keys.toList();
+    List cats = widget.songData.map((cat) => cat.name).toList();
 
     return Scaffold(
         appBar: _getAppBar("Select Songs", false),
-        body: _getGridView(keys, _goToCategory));
+        body: _getGridView(cats, _goToCategory));
   }
 
   Scaffold _getCategoryDetailView() {
-    Map categoryMap =
-        _songData["categories"][_currPageType[0]]; // eg. GEM, JJ ...
-    List<dynamic> keys = categoryMap.keys.toList();
+    List singers =
+        _getSelectedCategory().singers.map((singer) => singer.name).toList();
 
     return Scaffold(
         appBar: _getAppBar(_currPageType[0], true),
-        body: _getGridView(keys, _goToSinger));
+        body: _getGridView(singers, _goToSinger));
   }
 
   Scaffold _getSingerDetailView(AppInheritedWidgetState appState) {
-    List<Song> songs =
-        _songData["categories"][_currPageType[0]][_currPageType[1]];
+    List<Song> songs = _getSelectedSinger().songs;
 
     return Scaffold(
         appBar: _getAppBar(_currPageType[1], true),

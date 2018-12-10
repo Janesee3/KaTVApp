@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import './select_song.widget.dart';
 import './playlist.widget.dart';
+import 'package:katv_app/models/category.model.dart';
 
 class KtvUI extends StatefulWidget {
-  KtvUI({Key key}) : super(key: key);
+  KtvUI({Key key, this.songData}) : super(key: key);
+
+  final List<Category> songData;
 
   @override
   _KtvUIState createState() => _KtvUIState();
@@ -24,7 +27,12 @@ class _KtvUIState extends State<KtvUI> with SingleTickerProviderStateMixin {
         ),
       ]),
       tabBuilder: (context, index) => CupertinoPageScaffold(
-            child: Center(child: index == 0 ? SelectSong() : Playlist()),
+            child: Center(
+                child: index == 0
+                    ? SelectSong(
+                        songData: widget.songData,
+                      )
+                    : Playlist()),
           ),
     );
   }
